@@ -1,16 +1,31 @@
-<script setup></script>
+<script setup>
+import { ref } from 'vue'
+
+const emit = defineEmits(['FilterApplied'])
+
+const messageFilter = ref('All Messages')
+const sortFilter = ref('Oldest')
+
+function FilterChange() {
+  emit('FilterApplied', {
+    status: messageFilter.value,
+    sort: sortFilter.value,
+  })
+}
+</script>
 
 <template>
   <div class="filters-container">
     <div class="filters">
-      <select class="filter-select">
-        <option>All Messages</option>
-        <option>Unseen</option>
-        <option>Seen</option>
+      <select v-model="messageFilter" @change="FilterChange" class="filter-select">
+        <option value="All Messages">All Messages</option>
+        <option value="Unseen">Unseen</option>
+        <option value="Seen">Seen</option>
       </select>
-      <select class="filter-select">
-        <option>Newest</option>
-        <option>Oldest</option>
+
+      <select v-model="sortFilter" @change="FilterChange" class="filter-select">
+        <option value="Newest">Newest</option>
+        <option value="Oldest">Oldest</option>
       </select>
     </div>
   </div>
@@ -18,29 +33,30 @@
 
 <style scoped>
 .filters-container {
-  position: fixed;
-  top: 20vh;
-  left: 0;
-  width: 350px;
-  z-index: 10;
-  background-color: var(--porcelain);
+  width: 100%;
+  flex-shrink: 0;
 }
 
 .filters {
   display: flex;
-  border: none;
+  width: 100%;
+  margin-top: 42px;
+  border-right: 1px solid var(--muted-teal);
 }
 
 .filter-select {
-  flex: 1;
-  padding: 9px;
-
-  border-right: 1px solid var(--muted-teal);
-  border-bottom: 1px solid var(--muted-teal);
-  border-top: none;
-  border-left: none;
-
-  background-color: var(--porcelain);
   width: 50%;
+  flex: 1;
+
+  height: 40px;
+  padding: 0 10px;
+
+  background: var(--porcelain);
+  border: none;
+  border-bottom: 1px solid var(--muted-teal);
+
+  font-size: 14px;
+
+  margin-top: 1px;
 }
 </style>

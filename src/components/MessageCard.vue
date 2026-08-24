@@ -3,6 +3,7 @@ const props = defineProps<{
   message: {
     sender: string
     subject: string
+    timestamp: string
   }
 }>()
 
@@ -11,7 +12,11 @@ const emit = defineEmits(['openMail'])
 
 <template>
   <button class="Card" @click="emit('openMail', props.message)">
-    <span class="sender">{{ props.message?.sender || 'Unbekannter Sender' }}</span>
+    <span class="sender">
+      {{ props.message?.sender || 'Unbekannter Sender' }}
+      <span class="date">- {{ props.message?.timestamp }}</span>
+    </span>
+
     <span class="subject">{{ props.message?.subject || 'Kein Betreff' }}</span>
   </button>
 </template>
@@ -35,6 +40,13 @@ const emit = defineEmits(['openMail'])
 .sender {
   font-weight: bold;
   color: #333333;
+}
+
+.date {
+  font-weight: normal;
+  font-size: 12px;
+  color: #888888;
+  margin-left: 8px;
 }
 
 .subject {

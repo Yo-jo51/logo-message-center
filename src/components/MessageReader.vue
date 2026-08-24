@@ -25,9 +25,10 @@ defineProps<{
 <style scoped>
 .reader {
   flex: 1;
-  height: 100%;
+  height: 85vh;
   background-color: var(--parchment);
   padding: 20px;
+  margin-top: 15vh;
   overflow-y: auto;
 }
 #body {

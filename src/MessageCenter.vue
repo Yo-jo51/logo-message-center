@@ -1,27 +1,48 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+
 import MessageSearch from './components/MessageSearch.vue'
 import MessageFilter from './components/MessageFilter.vue'
-import MessageList from './components/MessageList.vue'
 import MessageReader from './components/MessageReader.vue'
 import MessageCard from './components/MessageCard.vue'
 
 import { TestMessages } from '@/MessageData/MessageData'
 
+const messages = ref(TestMessages)
 const currentMessage = ref(null)
 
-const showReader = ref(false)
+const filter = ref({
+  status: 'All Messages',
+  sort: 'Oldest',
+})
+
+const filteredMessages = computed(() => {
+  let result = messages.value
+
+  if (filter.value.status !== 'All Messages') {
+    result = result.filter((message) => message.status === filter.value.status)
+  }
+
+  return [...result].sort((a, b) => {
+    const timeA = new Date(a.timestamp)
+    const timeB = new Date(b.timestamp)
+
+    return filter.value.sort === 'Newest' ? timeB - timeA : timeA - timeB
+  })
+})
 </script>
 
 <template>
   <div class="layout">
     <div class="sidebar">
-      <MessageSearch />
-      <MessageFilter />
+      <div class="sidebar-controls">
+        <MessageSearch />
+        <MessageFilter @FilterApplied="filter = $event" />
+      </div>
 
       <div class="MessageList">
         <MessageCard
-          v-for="message in TestMessages"
+          v-for="message in filteredMessages"
           :key="message.id"
           :message="message"
           @openMail="currentMessage = $event"
@@ -35,33 +56,34 @@ const showReader = ref(false)
 
 <style scoped>
 .layout {
-  padding-top: 15vh;
   display: flex;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
 }
-
 .sidebar {
   display: flex;
   flex-direction: column;
-  gap: 10px;
   width: 100%;
   max-width: 350px;
-  height: 100vh;
+  height: 85vh;
   flex-shrink: 0;
+  margin-top: 15vh;
+  gap: 5px;
 }
-
+.sidebar-controls {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex-shrink: 0;
+  gap: 5px;
+}
 .MessageList {
   display: flex;
   flex-direction: column;
   gap: 5px;
   width: 100%;
-  margin-top: 80px;
   overflow-y: auto;
-}
-
-.MessageList::-webkit-scrollbar {
-  display: none;
+  flex-grow: 1;
 }
 </style>
