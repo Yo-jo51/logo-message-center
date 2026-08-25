@@ -6,6 +6,7 @@ export const TestMessages = [
     body: 'Verpasse nicht unsere exklusive Aktion! Sichere dir jetzt das neue Samsung Galaxy mit satten 20% Rabatt. Gib einfach den Code SAM20 beim Checkout ein und der Abzug erfolgt automatisch im Warenkorb. Nur solange der Vorrat reicht!',
     timestamp: '2026/08/18 14:22',
     seen: false,
+    important: false,
   },
   {
     id: 2,
@@ -14,6 +15,7 @@ export const TestMessages = [
     body: 'Use Teams to connect and collaborate in one place through meetings, chat, or file sharing. Plus, get work done faster by using Microsoft 365 apps directly from Teams—keeping everything streamlined.',
     timestamp: '2026/08/18 10:30',
     seen: false,
+    important: false,
   },
   {
     id: 3,
@@ -22,14 +24,16 @@ export const TestMessages = [
     body: 'Hi, The race is about to start. RTCC | TCR Round 3 - Laguna Seca GP | Multiclass TCR + MX-5 With Apex To Apex',
     timestamp: '2026/08/17 14:22',
     seen: false,
+    important: true,
   },
   {
     id: 4,
     sender: 'Steam Support',
     subject: 'Ihr Einkauf wurde erstattet',
     body: 'Hallo Lvery, Wir haben Ihnen die Rückerstattung als Steam-Guthaben gutgeschrieben. Das Guthaben wird Ihnen als "ausstehend" angezeigt und wird innerhalb von 7 Tagen verfügbar.',
-    timestamp: '2030/01/01 12:00',
+    timestamp: '2025/01/01 12:00',
     seen: false,
+    important: false,
   },
   {
     id: 5,
@@ -38,5 +42,6 @@ export const TestMessages = [
     body: 'Moin',
     timestamp: '2026/08/16 16:45',
     seen: false,
+    important: true,
   },
 ]

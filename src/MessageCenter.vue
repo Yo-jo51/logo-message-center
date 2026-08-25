@@ -22,6 +22,10 @@ function openMessage(message) {
   currentMessage.value = message
 }
 
+const unreadCount = computed(() => {
+  return messages.value.filter((message) => !message.seen).length
+})
+
 const filteredMessages = computed(() => {
   let result = messages.value
 
@@ -56,13 +60,19 @@ const filteredMessages = computed(() => {
 
       <MessageFilter @FilterApplied="filter = $event" />
 
+      <UnreadCounter class="UnreadCounter"> Unread Messages: {{ unreadCount }} </UnreadCounter>
+
       <div class="MessageList">
         <MessageCard
           v-for="message in filteredMessages"
           :key="message.id"
           :message="message"
           @openMail="openMessage"
-          :class="{ ifseen: message.seen }"
+          :class="{
+            ifseen: message.seen,
+            important: message.important,
+            selected: currentMessage === message,
+          }"
         />
       </div>
     </div>
@@ -96,5 +106,17 @@ const filteredMessages = computed(() => {
   overflow-y: auto;
   flex-grow: 1;
   padding: 5px;
+}
+
+.UnreadCounter {
+  text-align: center;
+  padding: 6px 12px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  background-color: #fffdf9;
+  border: 1px solid #87a687;
+  color: darkolivegreen;
+  border-radius: 3px;
+  align-self: center;
 }
 </style>

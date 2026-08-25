@@ -23,41 +23,57 @@ const emit = defineEmits(['openMail'])
 
 <style scoped>
 .Card {
+  box-sizing: border-box;
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 6px;
   padding: 16px 20px;
-  background-color: #fffdf9;
+  background: #fffdf9;
   border: 1px solid #87a687;
   border-left: 6px solid darkolivegreen;
   border-radius: 3px;
   text-align: left;
   cursor: pointer;
-  box-sizing: border-box;
   box-shadow: 0 2px 4px rgba(79, 110, 79, 0.12);
-  transition:
-    background-color 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
+  transition: 0.2s ease;
 }
 
 .Card:hover {
-  background-color: #f4f1ea;
-  border-color: #4f6e4f;
-  box-shadow: 0 4px 10px rgba(79, 110, 79, 0.2);
+  background: #f4f1ea;
 }
 
 .Card.ifseen {
-  background-color: #e6e2d8;
-  border: 1px solid #c8c0ae;
-  border-left: 6px solid #c8c0ae;
+  background: #e6e2d8;
+  border-color: #c8c0ae;
+  border-left-color: #c8c0ae;
   box-shadow: none;
 }
 
-.Card.ifseen:hover {
-  background-color: #dad5ca;
-  border-color: #b8b09e;
+.Card.important {
+  background: #fffaa0;
+  border-left-color: #eb9c5c;
+}
+
+.Card.selected {
+  background: #d1e7dd;
+  border-color: #1f4e1f;
+  box-shadow: 0 0 0 2px #4f6e4f;
+}
+
+.Card.ifseen .sender {
+  font-weight: 500;
+  color: #555;
+}
+
+.Card.ifseen .date {
+  font-weight: normal;
+  color: #777;
+}
+
+.Card.ifseen .subject {
+  font-weight: normal;
+  color: #666;
 }
 
 .card-header {
@@ -67,36 +83,21 @@ const emit = defineEmits(['openMail'])
 }
 
 .sender {
+  font-size: 15px;
   font-weight: 800;
   color: #2e442e;
-  font-size: 15px;
-}
-
-.Card.ifseen .sender {
-  font-weight: 500;
-  color: #555555;
 }
 
 .date {
-  font-weight: 600;
   font-size: 12px;
+  font-weight: 600;
   color: #4f6e4f;
 }
 
-.Card.ifseen .date {
-  font-weight: normal;
-  color: #777777;
-}
-
 .subject {
-  color: #111111;
-  font-weight: 600;
   font-size: 14px;
+  font-weight: 600;
   line-height: 1.4;
-}
-
-.Card.ifseen .subject {
-  color: #666666;
-  font-weight: normal;
+  color: #111;
 }
 </style>
