@@ -26,35 +26,77 @@ const emit = defineEmits(['openMail'])
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-
-  padding: 18px;
-  background-color: #ffffff;
-  border: 1px solid #b0bec5;
-
+  gap: 6px;
+  padding: 16px 20px;
+  background-color: #fffdf9;
+  border: 1px solid #87a687;
+  border-left: 6px solid darkolivegreen;
+  border-radius: 3px;
   text-align: left;
   cursor: pointer;
   box-sizing: border-box;
-}
-
-.sender {
-  font-weight: bold;
-  color: #333333;
-}
-
-.date {
-  font-weight: normal;
-  font-size: 12px;
-  color: #888888;
-  margin-left: 8px;
-}
-
-.subject {
-  color: #666666;
-  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(79, 110, 79, 0.12);
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .Card:hover {
-  background-color: #f5f5f5;
+  background-color: #f4f1ea;
+  border-color: #4f6e4f;
+  box-shadow: 0 4px 10px rgba(79, 110, 79, 0.2);
+}
+
+.Card.ifseen {
+  background-color: #e6e2d8;
+  border: 1px solid #c8c0ae;
+  border-left: 6px solid #c8c0ae;
+  box-shadow: none;
+}
+
+.Card.ifseen:hover {
+  background-color: #dad5ca;
+  border-color: #b8b09e;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sender {
+  font-weight: 800;
+  color: #2e442e;
+  font-size: 15px;
+}
+
+.Card.ifseen .sender {
+  font-weight: 500;
+  color: #555555;
+}
+
+.date {
+  font-weight: 600;
+  font-size: 12px;
+  color: #4f6e4f;
+}
+
+.Card.ifseen .date {
+  font-weight: normal;
+  color: #777777;
+}
+
+.subject {
+  color: #111111;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.Card.ifseen .subject {
+  color: #666666;
+  font-weight: normal;
 }
 </style>

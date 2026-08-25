@@ -9,6 +9,7 @@ import MessageCard from './components/MessageCard.vue'
 import { TestMessages } from '@/MessageData/MessageData'
 
 const messages = ref(TestMessages)
+const searchText = ref('')
 const currentMessage = ref(null)
 
 const filter = ref({
@@ -16,12 +17,28 @@ const filter = ref({
   sort: 'Oldest',
 })
 
+function openMessage(message) {
+  message.seen = true
+  currentMessage.value = message
+}
+
 const filteredMessages = computed(() => {
   let result = messages.value
 
-  if (filter.value.status !== 'All Messages') {
-    result = result.filter((message) => message.status === filter.value.status)
+  if (searchText.value) {
+    const search = searchText.value.toLowerCase()
+
+    result = result.filter(
+      (message) =>
+        message.sender.toLowerCase().includes(search) ||
+        message.subject.toLowerCase().includes(search) ||
+        message.body.toLowerCase().includes(search),
+    )
   }
+
+  if (filter.value.status === 'Seen') result = result.filter((message) => message.seen)
+
+  if (filter.value.status === 'Unseen') result = result.filter((message) => !message.seen)
 
   return [...result].sort((a, b) => {
     const timeA = new Date(a.timestamp)
@@ -35,17 +52,17 @@ const filteredMessages = computed(() => {
 <template>
   <div class="layout">
     <div class="sidebar">
-      <div class="sidebar-controls">
-        <MessageSearch />
-        <MessageFilter @FilterApplied="filter = $event" />
-      </div>
+      <MessageSearch @SearchChanged="searchText = $event" />
+
+      <MessageFilter @FilterApplied="filter = $event" />
 
       <div class="MessageList">
         <MessageCard
           v-for="message in filteredMessages"
           :key="message.id"
           :message="message"
-          @openMail="currentMessage = $event"
+          @openMail="openMessage"
+          :class="{ ifseen: message.seen }"
         />
       </div>
     </div>
@@ -61,23 +78,16 @@ const filteredMessages = computed(() => {
   height: 100vh;
   overflow: hidden;
 }
+
 .sidebar {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 350px;
+  width: 350px;
   height: 85vh;
-  flex-shrink: 0;
   margin-top: 15vh;
   gap: 5px;
 }
-.sidebar-controls {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  flex-shrink: 0;
-  gap: 5px;
-}
+
 .MessageList {
   display: flex;
   flex-direction: column;
@@ -85,5 +95,6 @@ const filteredMessages = computed(() => {
   width: 100%;
   overflow-y: auto;
   flex-grow: 1;
+  padding: 5px;
 }
 </style>

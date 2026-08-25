@@ -2,6 +2,7 @@
 defineProps<{
   message: {
     sender: string
+    timestamp: string
     subject: string
     body: string | null
   }
@@ -9,10 +10,12 @@ defineProps<{
 </script>
 
 <template>
-  <div class="reader">
+  <!-- Die Klasse 'empty-state' wird dynamisch hinzugefügt, wenn keine Nachricht vorhanden ist -->
+  <div class="reader" :class="{ 'empty-state': !message }">
     <div class="message" v-if="message">
-      <p>Sender: {{ message.sender }}</p>
-      <h2>{{ message.subject }}</h2>
+      <p id="Sender">Sender: {{ message.sender }}</p>
+      <p id="Date">Date: {{ message.timestamp }}</p>
+      <h2 id="Subject">{{ message.subject }}</h2>
       <p id="body">{{ message.body || 'No Content' }}</p>
     </div>
 
@@ -30,9 +33,42 @@ defineProps<{
   padding: 20px;
   margin-top: 15vh;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
+
+.reader.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+h3 {
+  font-weight: 900;
+  font-size: x-large;
+  max-width: 45ch;
+  color: #7a7a7a;
+  transform: translateY(-20px);
+}
+
+#Subject {
+  padding-top: 6px;
+  border-top: 1px solid #c8c0ae;
+}
+
 #body {
   margin-top: 20px;
   max-width: 70ch;
+}
+
+#Date {
+  margin-top: 6px;
+  margin-bottom: 6px;
+  color: rgb(100, 99, 99);
+}
+
+#Sender {
+  font-size: larger;
 }
 </style>
