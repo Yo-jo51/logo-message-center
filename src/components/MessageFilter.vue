@@ -12,15 +12,19 @@ function FilterChange() {
     sort: sortFilter.value,
   })
 }
+
+defineProps(['totalCount', 'unreadCount', 'readCount'])
 </script>
 
 <template>
   <div class="filters-container">
     <div class="filters">
       <select v-model="messageFilter" @change="FilterChange" class="filter-select">
-        <option value="All Messages">All Messages</option>
-        <option value="Unseen">Unseen</option>
-        <option value="Seen">Seen</option>
+        <option value="All Messages">All Messages ({{ totalCount }})</option>
+
+        <option value="Unseen">Unseen ({{ unreadCount }})</option>
+
+        <option value="Seen">Seen ({{ readCount }})</option>
       </select>
 
       <select v-model="sortFilter" @change="FilterChange" class="filter-select">
@@ -47,16 +51,12 @@ function FilterChange() {
 .filter-select {
   width: 50%;
   flex: 1;
-
   height: 40px;
   padding: 0 10px;
-
   background: var(--porcelain);
   border: none;
   border-bottom: 1px solid var(--muted-teal);
-
   font-size: 14px;
-
   margin-top: 1px;
 }
 </style>

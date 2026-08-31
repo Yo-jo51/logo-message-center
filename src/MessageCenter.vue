@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import MessageSearch from './components/MessageSearch.vue'
 import MessageFilter from './components/MessageFilter.vue'
@@ -16,6 +16,9 @@ const creatingNewMail = ref(false)
 
 const inboxOpen = ref(true)
 const sentOpen = ref(true)
+
+const filterStatus = ref('All Messages')
+const sortOrder = ref('Oldest')
 
 function openNewMail() {
   currentMessage.value = null
@@ -36,18 +39,71 @@ function toggleSent() {
   sentOpen.value = !sentOpen.value
 }
 
+function applyFilter(filter) {
+  filterStatus.value = filter.status
+  sortOrder.value = filter.sort
+}
+
+const filteredMessages = computed(() => {
+  let result = [...messages.value]
+
+  if (filterStatus.value === 'Seen') {
+    result = result.filter((message) => message.seen)
+  }
+
+  if (filterStatus.value === 'Unseen') {
+    result = result.filter((message) => !message.seen)
+  }
+
+  const search = searchText.value.trim().toLowerCase()
+
+  if (search) {
+    result = result.filter(
+      (message) =>
+        String(message.sender || '')
+          .toLowerCase()
+          .includes(search) ||
+        String(message.subject || '')
+          .toLowerCase()
+          .includes(search) ||
+        String(message.body || '')
+          .toLowerCase()
+          .includes(search),
+    )
+  }
+
+  result.sort((a, b) => {
+    const dateA = new Date(a.timestamp)
+    const dateB = new Date(b.timestamp)
+
+    if (sortOrder.value === 'Newest') {
+      return dateB - dateA
+    }
+
+    return dateA - dateB
+  })
+
+  return result
+})
+
+const inboxMessages = computed(() =>
+  filteredMessages.value.filter((message) => message.folder === 'Inbox'),
+)
+
+const sentMessages = computed(() =>
+  filteredMessages.value.filter((message) => message.folder === 'Sent'),
+)
+
 const sendMail = (newMailData) => {
-  const newMessage = {
+  messages.value.push({
     id: messages.value.length + 1,
     sender: 'You',
     subject: newMailData.subject,
     body: newMailData.body,
-    timestamp: new Date().toLocaleDateString(),
+    timestamp: new Date().toISOString(),
     folder: 'Sent',
     seen: true,
-  }
-
-  messages.value.push(newMessage)
+  })
 
   creatingNewMail.value = false
 }
@@ -58,12 +114,12 @@ const sendMail = (newMailData) => {
     <div class="sidebar">
       <MessageSearch @SearchChanged="searchText = $event" />
 
-      <MessageFilter />
-
-      <div class="UnreadCounter">
-        Unread Messages:
-        {{ messages.filter((message) => !message.seen).length }}
-      </div>
+      <MessageFilter
+        :total-count="messages.length"
+        :unread-count="messages.filter((m) => !m.seen).length"
+        :read-count="messages.filter((m) => m.seen).length"
+        @FilterApplied="applyFilter"
+      />
 
       <!-- INBOX -->
       <div class="folder">
@@ -71,7 +127,7 @@ const sendMail = (newMailData) => {
           <span>Inbox</span>
 
           <span>
-            {{ messages.filter((message) => message.folder === 'Inbox').length }}
+            {{ inboxMessages.length }}
           </span>
 
           <span>
@@ -81,7 +137,7 @@ const sendMail = (newMailData) => {
 
         <div v-show="inboxOpen" class="folder-body">
           <MessageCard
-            v-for="message in messages.filter((message) => message.folder === 'Inbox')"
+            v-for="message in inboxMessages"
             :key="message.id"
             :message="message"
             @openMail="openMessage"
@@ -100,7 +156,7 @@ const sendMail = (newMailData) => {
           <span>Sent</span>
 
           <span>
-            {{ messages.filter((message) => message.folder === 'Sent').length }}
+            {{ sentMessages.length }}
           </span>
 
           <span>
@@ -110,7 +166,7 @@ const sendMail = (newMailData) => {
 
         <div v-show="sentOpen" class="folder-body">
           <MessageCard
-            v-for="message in messages.filter((message) => message.folder === 'Sent')"
+            v-for="message in sentMessages"
             :key="message.id"
             :message="message"
             @openMail="openMessage"
@@ -126,7 +182,9 @@ const sendMail = (newMailData) => {
 
     <NewMail v-if="creatingNewMail" @send="sendMail" />
 
-    <MessageReader v-else :message="currentMessage" />
+    <MessageReader v-else-if="currentMessage" :message="currentMessage" />
+
+    <div v-else class="empty-reader">No Message selected</div>
 
     <button class="plus-btn" @click="openNewMail">+</button>
   </div>
@@ -147,17 +205,6 @@ const sendMail = (newMailData) => {
   height: 85vh;
   margin-top: 15vh;
   gap: 5px;
-}
-
-.MessageList {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  overflow-y: auto;
-  scrollbar-width: none;
-  flex-grow: 1;
-  padding: 5px;
 }
 
 .folder {
@@ -183,22 +230,6 @@ const sendMail = (newMailData) => {
 
 .folder-header span:first-child {
   flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.folder-meta {
-  color: #4f6e4f;
-  margin-right: 8px;
-  font-size: 0.8rem;
-}
-
-.folder-toggle {
-  width: 18px;
-  text-align: center;
-  font-size: 1.2rem;
-  line-height: 1;
 }
 
 .folder-body {
@@ -209,18 +240,6 @@ const sendMail = (newMailData) => {
   max-height: 400px;
   overflow-y: auto;
   scrollbar-width: none;
-}
-
-.UnreadCounter {
-  text-align: center;
-  padding: 6px 12px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  background-color: #fffdf9;
-  border: 1px solid #87a687;
-  color: darkolivegreen;
-  border-radius: 3px;
-  align-self: center;
 }
 
 .plus-btn {
@@ -234,15 +253,18 @@ const sendMail = (newMailData) => {
   background-color: #4f6e4f;
   color: white;
   font-size: 32px;
-  font-weight: 300;
-  line-height: 1;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .plus-btn:hover {
   background-color: #5a7b5a;
+}
+
+.empty-reader {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
 }
 </style>

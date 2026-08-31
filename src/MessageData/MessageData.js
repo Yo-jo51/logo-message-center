@@ -120,3 +120,7 @@ export const TestMessages = [
     folder: 'Inbox',
   },
 ]
+
+// Amtsgericht Musterstadt – Betreuungsgericht
+//Einreichung des Jahresberichts und Vergütungsantrag für den Zeitraum 01.01.2025 bis 31.12.2025
+//Sehr geehrte Damen und Herren,in dem oben genannten Betreuungsverfahren überreiche ich in der Anlage die folgenden Dokumente zur gefälligen Kenntnisnahme und weiteren Veranlassung:Jahresbericht für den Berichtszeitraum vom 01.01.2025 bis 31.12.2025 mit Angaben zum aktuellen Gesundheitszustand und zur Wohnsituation der Betroffenen.Rechnungslegung nebst Vermögensverzeichnis zum Stichtag 31.12.2025.Vergütungsantrag für das vergangene Betreuungsjahr.Ich bitte um antragsgemäße Festsetzung der Vergütung und Erteilung einer entsprechenden Bestätigung.Mit freundlichen GrüßenMax Mustermann(Berufsbetreuer)
