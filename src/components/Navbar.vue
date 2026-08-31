@@ -24,7 +24,7 @@
 }
 
 h1 {
-  font-size: 2.3rem;
+  font-size: 2.5rem;
   font-weight: 400;
   margin: 0;
   color: #abc8b1;
