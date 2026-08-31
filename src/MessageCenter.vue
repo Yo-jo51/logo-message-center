@@ -122,13 +122,9 @@ const sendMail = (newMailData) => {
       />
 
       <!-- INBOX -->
-      <div class="folder">
+      <div class="folder" :class="{ active: inboxOpen }">
         <button class="folder-header" @click="toggleInbox">
-          <span>Inbox</span>
-
-          <span>
-            {{ inboxMessages.length }}
-          </span>
+          <span>Inbox ({{ inboxMessages.length }})</span>
 
           <span>
             {{ inboxOpen ? '∧' : '∨' }}
@@ -151,13 +147,9 @@ const sendMail = (newMailData) => {
       </div>
 
       <!-- SENT -->
-      <div class="folder">
+      <div class="folder" :class="{ active: sentOpen }">
         <button class="folder-header" @click="toggleSent">
-          <span>Sent</span>
-
-          <span>
-            {{ sentMessages.length }}
-          </span>
+          <span>Sent ({{ sentMessages.length }})</span>
 
           <span>
             {{ sentOpen ? '∧' : '∨' }}
@@ -208,15 +200,17 @@ const sendMail = (newMailData) => {
 }
 
 .folder {
-  border-bottom: 1px solid #87a687;
+  border: none;
   overflow: hidden;
+}
+
+.folder.active {
+  border-bottom: 1px solid #87a687;
 }
 
 .folder-header {
   width: 100%;
-  border: 1px solid #87a687;
-  border-radius: 6px;
-  background: #edf3ed;
+  border: none;
   color: #2f4f2f;
   padding: 10px 12px;
   display: flex;
