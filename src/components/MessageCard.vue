@@ -43,7 +43,7 @@ const emit = defineEmits(['openMail'])
   background: #f4f1ea;
 }
 
-.Card.ifseen {
+.Card.seen {
   background: #e6e2d8;
   border-color: #c8c0ae;
   border-left-color: #c8c0ae;
@@ -61,17 +61,17 @@ const emit = defineEmits(['openMail'])
   box-shadow: 0 0 0 2px #4f6e4f;
 }
 
-.Card.ifseen .sender {
+.Card.seen .sender {
   font-weight: 500;
   color: #555;
 }
 
-.Card.ifseen .date {
+.Card.seen .date {
   font-weight: normal;
   color: #777;
 }
 
-.Card.ifseen .subject {
+.Card.seen .subject {
   font-weight: normal;
   color: #666;
 }

@@ -10,7 +10,6 @@ defineProps<{
 </script>
 
 <template>
-  <!-- Die Klasse 'empty-state' wird dynamisch hinzugefügt, wenn keine Nachricht vorhanden ist -->
   <div class="reader" :class="{ 'empty-state': !message }">
     <div class="message" v-if="message">
       <p id="Sender">Sender: {{ message.sender }}</p>
