@@ -223,10 +223,6 @@ function toggleSent() {
   text-align: left;
 }
 
-.folder-header span:first-child {
-  flex: 1;
-}
-
 .folder-body {
   display: flex;
   flex-direction: column;

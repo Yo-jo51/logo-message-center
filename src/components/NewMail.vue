@@ -20,12 +20,12 @@ const emit = defineEmits<{
       body: string
       priority: boolean
       attachments: File[]
+      fileName: string | null
     },
   ): void
 }>()
 
 const isEmailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient.value.trim()))
-
 const showError = computed(() => hasAttemptedSubmit.value && !isEmailValid.value)
 
 function updateBody() {
@@ -45,7 +45,6 @@ function uploadFile(event: Event) {
 
 function sendEmail() {
   hasAttemptedSubmit.value = true
-
   if (!isEmailValid.value) return
 
   emit('send', {
@@ -54,8 +53,10 @@ function sendEmail() {
     body: body.value,
     priority: priority.value,
     attachments: selectedFile.value ? [selectedFile.value] : [],
+    fileName: selectedFile.value ? selectedFile.value.name : null, // Hier wird der Name übergeben
   })
 
+  // Reset Form
   recipient.value = ''
   subject.value = ''
   body.value = ''
@@ -107,16 +108,19 @@ function sendEmail() {
         ></div>
       </div>
 
+      <div v-if="selectedFile" class="attachments-section">
+        <div class="attachment-chip">
+          <span class="file-name">{{ selectedFile.name }}</span>
+          <span class="file-size"> ({{ (selectedFile.size / 1024).toFixed(1) }} KB) </span>
+        </div>
+      </div>
+
       <div class="buttons">
         <div class="upload-btn">
-          <input ref="fileInput" type="file" hidden @change="" />
-
+          <input ref="fileInput" type="file" hidden @change="uploadFile" />
           <button type="button" @click="fileInput?.click()">Upload</button>
-
-          <span v-if="selectedFile">
-            {{ selectedFile.name }}
-          </span>
         </div>
+
         <button class="send-btn" :class="{ 'btn-disabled': showError }" @click="sendEmail">
           Send
         </button>
@@ -138,27 +142,23 @@ function sendEmail() {
   display: flex;
   flex-direction: column;
 }
-
 .new-mail {
   width: 100%;
   max-width: 900px;
 }
-
 h2 {
   margin-bottom: 20px;
 }
-
 .input-group {
   display: flex;
   flex-direction: column;
   gap: 6px;
   margin-bottom: 15px;
 }
-
 label {
   font-weight: 700;
+  white-space: nowrap;
 }
-
 input,
 .text-editor {
   width: 100%;
@@ -169,70 +169,66 @@ input,
   font: inherit;
   color: #111;
   box-sizing: border-box;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
 }
-
 input {
   border-radius: 4px;
 }
-
 input:focus,
 .text-editor:focus {
   outline: none;
   border-color: darkolivegreen;
 }
-
 input.input-error {
   border-color: #b93a3a;
   background-color: #fff9f9;
 }
-
-input.input-error:focus {
-  box-shadow: 0 0 0 2px rgba(185, 58, 58, 0.2);
-}
-
 .error-text {
   color: #b93a3a;
   font-size: 0.85rem;
   margin: 0;
   font-weight: 600;
 }
-
 .toolbar {
   display: flex;
   gap: 4px;
 }
-
 .toolbar button {
   background: #fffdf9;
   border: 1px solid #c8c0ae;
   border-radius: 3px;
   padding: 4px 10px;
   cursor: pointer;
-  font-family: inherit;
-  font-size: 0.9rem;
 }
-
 .toolbar button:hover {
   background-color: #e2dacb;
 }
-
 .text-editor {
   min-height: 250px;
   max-height: 300px;
   overflow-y: auto;
-  text-align: left;
-  word-break: break-word;
 }
-
 .text-editor:empty:before {
   content: attr(placeholder);
   color: #a09885;
-  pointer-events: none;
 }
-
+.attachments-section {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+.attachment-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #fffdf9;
+  border: 1px solid #c8c0ae;
+  border-radius: 6px;
+  padding: 8px 14px;
+}
+.file-size {
+  font-size: 0.85rem;
+  color: #666;
+}
 .send-btn,
 .upload-btn button {
   padding: 10px 20px;
@@ -241,31 +237,22 @@ input.input-error:focus {
   background-color: darkolivegreen;
   color: white;
   font-weight: 700;
-  font-family: inherit;
-  font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.2s ease;
 }
-
 .send-btn:hover,
 .upload-btn button:hover {
   background-color: #506f3a;
 }
-
 .send-btn.btn-disabled {
   background-color: #8c9c84;
   cursor: not-allowed;
 }
-
 .buttons {
   display: flex;
-  justify-content: start;
   align-items: center;
   margin-top: 20px;
   gap: 20px;
-  white-space: nowrap;
 }
-
 .buttons label {
   display: flex;
   align-items: center;

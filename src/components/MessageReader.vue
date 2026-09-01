@@ -2,6 +2,7 @@
 interface Attachment {
   name: string
   path: string
+  size: string
 }
 
 defineProps<{
@@ -28,8 +29,6 @@ defineProps<{
       <p id="body" v-html="message.body || 'No Content'"></p>
 
       <div class="attachments-section">
-        <h4>Attachments:</h4>
-
         <div class="attachments-grid">
           <a
             v-for="file in message.attachments || []"
@@ -39,6 +38,10 @@ defineProps<{
             class="attachment-chip"
           >
             <span class="file-name">📥 {{ file.name }}</span>
+
+            <span class="file-size" style="font-size: 0.75rem; color: #666; margin-top: 2px">
+              {{ file.size }}
+            </span>
           </a>
         </div>
       </div>
@@ -115,8 +118,9 @@ h3 {
 
 .attachments-grid {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
 }
 
 .attachment-chip {
@@ -136,17 +140,6 @@ h3 {
 .attachment-chip:hover {
   background-color: #f7f3e9;
   border-color: darkolivegreen;
-}
-
-.file-icon {
-  font-size: 1.2rem;
-  color: darkolivegreen;
-}
-
-.file-info {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
 }
 
 .file-name {
