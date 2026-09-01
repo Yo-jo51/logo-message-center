@@ -1,24 +1,38 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const recipient = ref('')
 const subject = ref('')
 const body = ref('')
 
+const hasAttemptedSubmit = ref(false)
+
 const emit = defineEmits<{
   (e: 'send', payload: { recipient: string; subject: string; body: string }): void
 }>()
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+const isEmailValid = computed(() => emailRegex.test(recipient.value.trim()))
+const showError = computed(() => hasAttemptedSubmit.value && !isEmailValid.value)
+
 const sendEmail = () => {
+  hasAttemptedSubmit.value = true
+
+  if (!isEmailValid.value) {
+    return
+  }
+
   emit('send', {
-    recipient: recipient.value,
-    subject: subject.value,
+    recipient: recipient.value.trim(),
+    subject: subject.value.trim(),
     body: body.value,
   })
 
   recipient.value = ''
   subject.value = ''
   body.value = ''
+  hasAttemptedSubmit.value = false
 }
 </script>
 
@@ -29,7 +43,14 @@ const sendEmail = () => {
 
       <div class="input-group">
         <label for="recipient">To</label>
-        <input id="recipient" v-model="recipient" type="text" placeholder="Recipient..." />
+        <input
+          id="recipient"
+          v-model="recipient"
+          type="text"
+          placeholder="Recipient..."
+          :class="{ 'input-error': showError }"
+        />
+        <p v-if="showError" class="error-text">Please enter a valid email address.</p>
       </div>
 
       <div class="input-group">
@@ -42,7 +63,9 @@ const sendEmail = () => {
         <textarea id="body" v-model="body" placeholder="Write your message..."></textarea>
       </div>
 
-      <button class="send-btn" @click="sendEmail">Send</button>
+      <button class="send-btn" :class="{ 'btn-disabled': showError }" @click="sendEmail">
+        Send
+      </button>
     </div>
   </div>
 </template>
@@ -89,12 +112,31 @@ textarea {
   font: inherit;
   color: #111;
   box-sizing: border-box;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 input:focus,
 textarea:focus {
   outline: none;
   border-color: darkolivegreen;
+}
+
+input.input-error {
+  border-color: #b93a3a;
+  background-color: #fff9f9;
+}
+
+input.input-error:focus {
+  box-shadow: 0 0 0 2px rgba(185, 58, 58, 0.2);
+}
+
+.error-text {
+  color: #b93a3a;
+  font-size: 0.85rem;
+  margin: 0;
+  font-weight: 600;
 }
 
 textarea {
@@ -110,9 +152,15 @@ textarea {
   color: white;
   font-weight: 700;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .send-btn:hover {
   background-color: #506f3a;
+}
+
+.send-btn.btn-disabled {
+  background-color: #8c9c84;
+  cursor: not-allowed;
 }
 </style>

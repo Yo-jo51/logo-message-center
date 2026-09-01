@@ -2,6 +2,7 @@ export const TestMessages = [
   {
     id: 1,
     sender: 'Samsung',
+    reciever: 'you',
     subject: 'Nur heute: 20% Rabatt auf alles!',
     body: 'Verpasse nicht unsere exklusive Aktion! Sichere dir jetzt das neue Samsung Galaxy mit satten 20% Rabatt. Gib einfach den Code SAM20 beim Checkout ein und der Abzug erfolgt automatisch im Warenkorb. Nur solange der Vorrat reicht!',
     timestamp: '2026/08/18 14:22',
@@ -12,6 +13,7 @@ export const TestMessages = [
   {
     id: 2,
     sender: 'Microsoft 365',
+    reciever: 'you',
     subject: 'Collaboration is so much easier with Microsoft Teams',
     body: 'Use Teams to connect and collaborate in one place through meetings, chat, or file sharing. Plus, get work done faster by using Microsoft 365 apps directly from Teams—keeping everything streamlined.',
     timestamp: '2026/08/18 10:30',
@@ -22,6 +24,7 @@ export const TestMessages = [
   {
     id: 3,
     sender: 'SRLeagues',
+    reciever: 'you',
     subject: 'About to start RTCC | TCR Round 3',
     body: 'Hi, The race is about to start. RTCC | TCR Round 3 - Laguna Seca GP | Multiclass TCR + MX-5 With Apex To Apex',
     timestamp: '2026/08/17 14:22',
@@ -32,6 +35,7 @@ export const TestMessages = [
   {
     id: 4,
     sender: 'Steam Support',
+    reciever: 'you',
     subject: 'Ihr Einkauf wurde erstattet',
     body: 'Hallo Lvery, Wir haben Ihnen die Rückerstattung als Steam-Guthaben gutgeschrieben. Das Guthaben wird Ihnen als "ausstehend" angezeigt und wird innerhalb von 7 Tagen verfügbar.',
     timestamp: '2025/01/01 12:00',
@@ -42,6 +46,7 @@ export const TestMessages = [
   {
     id: 5,
     sender: 'Lukas Weber',
+    reciever: 'you',
     subject: 'Feedback zu den neuen Komponenten',
     body: 'Moin',
     timestamp: '2026/08/16 16:45',
@@ -52,6 +57,7 @@ export const TestMessages = [
   {
     id: 6,
     sender: 'GitHub',
+    reciever: 'you',
     subject: '[GitHub] Security Alert: Vulnerability found in your repository',
     body: 'Hello Lvery, We found a known security vulnerability in one of your dependencies. Please review the alert on your repository dashboard and update the package to the latest version as soon as possible.',
     timestamp: '2026/08/25 09:15',
@@ -62,6 +68,7 @@ export const TestMessages = [
   {
     id: 7,
     sender: 'Netflix',
+    reciever: 'you',
     subject: 'Neu auf Netflix: Deine Highlights für das Wochenende',
     body: 'Hallo! Entdecke jetzt die neuesten Blockbuster und exklusiven Serien, die dieses Wochenende auf dich warten. Streame deine Favoriten direkt auf all deinen Geräten. Viel Spaß beim Anschauen!',
     timestamp: '2026/08/29 18:00',
@@ -72,6 +79,7 @@ export const TestMessages = [
   {
     id: 8,
     sender: 'DHL Packstation',
+    reciever: 'you',
     subject: 'Ihr Paket liegt zur Abholung bereit',
     body: 'Hallo Lvery, Ihr Paket von "Amazon" wurde erfolgreich in der Packstation 102 eingelegt. Sie können es innerhalb der nächsten 7 Tage mit Ihrem Abholcode abholen. Ihr Aktivierungscode lautet: 847-291.',
     timestamp: '2026/08/30 11:05',
@@ -82,6 +90,7 @@ export const TestMessages = [
   {
     id: 9,
     sender: 'Sparkasse',
+    reciever: 'you',
     subject: 'Wichtige Information zu Ihrem Online-Banking',
     body: 'Sehr geehrter Kunde, aus Sicherheitsgründen müssen wir Ihre Identität bestätigen. Bitte führen Sie die Aktualisierung Ihrer Daten innerhalb der nächsten 48 Stunden über unser Portal durch, um eine Sperrung zu vermeiden.',
     timestamp: '2026/08/30 08:12',
@@ -92,6 +101,7 @@ export const TestMessages = [
   {
     id: 10,
     sender: 'Spotify',
+    reciever: 'you',
     subject: 'Your Release Radar is ready!',
     body: 'Catch up on the latest music from artists you follow. We have updated your personalized Release Radar playlist with new singles and albums that dropped this week. Tune in now!',
     timestamp: '2026/08/28 06:00',
@@ -102,6 +112,7 @@ export const TestMessages = [
   {
     id: 11,
     sender: 'Vera (Mama)',
+    reciever: 'you',
     subject: 'Sonntagskuchen 🍰',
     body: 'Bringst du morgen bitte noch eine Packung Sahne mit? Oma kommt auch vorbei. Bis morgen, drück dich!',
     timestamp: '2026/08/29 15:30',
@@ -112,6 +123,7 @@ export const TestMessages = [
   {
     id: 12,
     sender: 'Vercel',
+    reciever: 'you',
     subject: '[Deployment Success] Project "portfolio-next" is live',
     body: 'Your project portfolio-next has been successfully deployed to production. Production URL: portfolio-next-lvery.vercel.app. Commit: "fix: mobile navigation responsiveness".',
     timestamp: '2026/08/31 09:40',
@@ -120,7 +132,3 @@ export const TestMessages = [
     folder: 'Inbox',
   },
 ]
-
-// Amtsgericht Musterstadt – Betreuungsgericht
-//Einreichung des Jahresberichts und Vergütungsantrag für den Zeitraum 01.01.2025 bis 31.12.2025
-//Sehr geehrte Damen und Herren,in dem oben genannten Betreuungsverfahren überreiche ich in der Anlage die folgenden Dokumente zur gefälligen Kenntnisnahme und weiteren Veranlassung:Jahresbericht für den Berichtszeitraum vom 01.01.2025 bis 31.12.2025 mit Angaben zum aktuellen Gesundheitszustand und zur Wohnsituation der Betroffenen.Rechnungslegung nebst Vermögensverzeichnis zum Stichtag 31.12.2025.Vergütungsantrag für das vergangene Betreuungsjahr.Ich bitte um antragsgemäße Festsetzung der Vergütung und Erteilung einer entsprechenden Bestätigung.Mit freundlichen GrüßenMax Mustermann(Berufsbetreuer)

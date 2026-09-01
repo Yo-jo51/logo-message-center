@@ -2,6 +2,7 @@
 defineProps<{
   message: {
     sender: string
+    reciever: string | null
     timestamp: string
     subject: string
     body: string | null
@@ -12,7 +13,9 @@ defineProps<{
 <template>
   <div class="reader" :class="{ 'empty-state': !message }">
     <div class="message" v-if="message">
-      <p id="Sender">Sender: {{ message.sender }}</p>
+      <p class="meta-line">From: {{ message.sender }}</p>
+      <p class="meta-line">To: {{ message.reciever || 'you' }}</p>
+
       <p id="Date">Date: {{ message.timestamp }}</p>
       <h2 id="Subject">{{ message.subject }}</h2>
       <p id="body">{{ message.body || 'No Content' }}</p>
@@ -67,7 +70,8 @@ h3 {
   color: rgb(100, 99, 99);
 }
 
-#Sender {
+.meta-line {
   font-size: larger;
+  margin: 2px 0;
 }
 </style>

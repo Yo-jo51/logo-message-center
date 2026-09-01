@@ -98,9 +98,10 @@ const sendMail = (newMailData) => {
   messages.value.push({
     id: messages.value.length + 1,
     sender: 'You',
+    reciever: newMailData.recipient,
     subject: newMailData.subject,
     body: newMailData.body,
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().toDateString(),
     folder: 'Sent',
     seen: true,
   })
