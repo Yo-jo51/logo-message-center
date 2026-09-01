@@ -1,4 +1,9 @@
 <script setup lang="ts">
+interface Attachment {
+  name: string
+  path: string
+}
+
 defineProps<{
   message: {
     sender: string
@@ -6,19 +11,38 @@ defineProps<{
     timestamp: string
     subject: string
     body: string | null
-  }
+    attachments?: Attachment[]
+  } | null
 }>()
 </script>
 
 <template>
   <div class="reader" :class="{ 'empty-state': !message }">
-    <div class="message" v-if="message">
+    <div v-if="message" class="message">
       <p class="meta-line">From: {{ message.sender }}</p>
       <p class="meta-line">To: {{ message.reciever || 'you' }}</p>
 
       <p id="Date">Date: {{ message.timestamp }}</p>
       <h2 id="Subject">{{ message.subject }}</h2>
+
       <p id="body" v-html="message.body || 'No Content'"></p>
+
+      <div class="attachments-section">
+        <h4>Attachments:</h4>
+        <div class="attachments-grid">
+          <a
+            v-for="file in message.attachments"
+            :key="file.path"
+            :href="file.path"
+            :download="file.name"
+            class="attachment-chip"
+          >
+            <div class="file-info">
+              <span class="file-name">📥 {{ file.name }}</span>
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
 
     <h3 v-else>
@@ -62,6 +86,7 @@ h3 {
 #body {
   margin-top: 20px;
   max-width: 70ch;
+  word-break: break-word;
 }
 
 #Date {
@@ -73,5 +98,64 @@ h3 {
 .meta-line {
   font-size: larger;
   margin: 2px 0;
+}
+
+.attachments-section {
+  margin-top: 40px;
+  padding-top: 15px;
+  border-top: 1px dashed #c8c0ae;
+  grid-row: column;
+}
+
+.attachments-section h4 {
+  margin: 0 0 12px 0;
+  color: #2f4f2f;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.attachments-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.attachment-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #fffdf9;
+  border: 1px solid #c8c0ae;
+  border-radius: 6px;
+  padding: 8px 14px;
+  min-width: 180px;
+  max-width: 280px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  text-decoration: none;
+}
+
+.attachment-chip:hover {
+  background-color: #f7f3e9;
+  border-color: darkolivegreen;
+}
+
+.file-icon {
+  font-size: 1.2rem;
+  color: darkolivegreen;
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.file-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

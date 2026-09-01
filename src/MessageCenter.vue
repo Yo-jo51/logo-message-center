@@ -9,7 +9,11 @@ import NewMail from './components/NewMail.vue'
 
 import { TestMessages } from '@/MessageData/MessageData'
 
-const messages = ref(TestMessages)
+//Chrome Storage save
+const savedMessages = localStorage.getItem('messages')
+
+const messages = ref(savedMessages ? JSON.parse(savedMessages) : TestMessages)
+
 const searchText = ref('')
 const currentMessage = ref(null)
 const creatingNewMail = ref(false)
@@ -29,6 +33,8 @@ function openMessage(message) {
   message.seen = true
   currentMessage.value = message
   creatingNewMail.value = false
+
+  localStorage.setItem('messages', JSON.stringify(messages.value))
 }
 
 function toggleInbox() {
@@ -100,7 +106,8 @@ const sentMessages = computed(() =>
 
 const sendMail = (newMailData) => {
   messages.value.push({
-    id: messages.value.length + 1,
+    id: messages.value.length ? Math.max(...messages.value.map((m) => m.id)) + 1 : 1,
+
     sender: 'You',
     reciever: newMailData.recipient,
     subject: newMailData.subject,
@@ -109,12 +116,14 @@ const sendMail = (newMailData) => {
     folder: 'Sent',
     seen: true,
     important: newMailData.priority,
+    attachments: newMailData.attachments || [],
   })
+
+  localStorage.setItem('messages', JSON.stringify(messages.value))
 
   creatingNewMail.value = false
 }
 
-//High priority nachrichten zählen
 const priorityCount = computed(() => {
   return messages.value.filter((message) => message.important).length
 })

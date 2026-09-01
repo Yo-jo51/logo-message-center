@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 
 const recipient = ref('')
 const subject = ref('')
-const body = ref('') // Enthält jetzt den formatierten HTML-String
+const body = ref('')
 const priority = ref(false)
 
 const hasAttemptedSubmit = ref(false)
@@ -12,21 +12,25 @@ const editorRef = ref<HTMLDivElement | null>(null)
 const emit = defineEmits<{
   (
     e: 'send',
-    payload: { recipient: string; subject: string; body: string; priority: boolean },
+    payload: {
+      recipient: string
+      subject: string
+      body: string
+      priority: boolean
+      attachments: File[]
+    },
   ): void
 }>()
 
 const isEmailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient.value.trim()))
 const showError = computed(() => hasAttemptedSubmit.value && !isEmailValid.value)
 
-// Funktion zum Formatieren des markierten Textes
 const format = (command: string) => {
   document.execCommand(command, false, '')
   updateBody()
   editorRef.value?.focus()
 }
 
-// Aktualisiert die reactive Variable mit dem HTML-Inhalt des Editors
 const updateBody = () => {
   if (editorRef.value) {
     body.value = editorRef.value.innerHTML
@@ -43,20 +47,34 @@ const sendEmail = () => {
   emit('send', {
     recipient: recipient.value.trim(),
     subject: subject.value.trim(),
-    body: body.value, // Sendet den formatierten HTML-Text
+    body: body.value,
     priority: priority.value,
+    attachments: selectedFile.value ? [selectedFile.value] : [],
   })
 
   recipient.value = ''
   subject.value = ''
   body.value = ''
   priority.value = false
+  selectedFile.value = null
 
-  if (editorRef.value) {
-    editorRef.value.innerHTML = '' // Leert das Editor-Spielfeld
+  if (fileInput.value) {
+    fileInput.value.value = ''
   }
 
   hasAttemptedSubmit.value = false
+}
+
+const selectedFile = ref<File | null>(null)
+
+const fileInput = ref<HTMLInputElement | null>(null)
+
+const handleFileUpload = (event: Event) => {
+  const input = event.target as HTMLInputElement
+
+  if (input.files && input.files.length > 0) {
+    selectedFile.value = input.files[0]
+  }
 }
 </script>
 
@@ -100,6 +118,15 @@ const sendEmail = () => {
       </div>
 
       <div class="buttons">
+        <div class="upload-btn">
+          <input ref="fileInput" type="file" hidden @change="handleFileUpload" />
+
+          <button type="button" @click="fileInput?.click()">Upload</button>
+
+          <span v-if="selectedFile">
+            {{ selectedFile.name }}
+          </span>
+        </div>
         <button class="send-btn" :class="{ 'btn-disabled': showError }" @click="sendEmail">
           Send
         </button>
@@ -216,18 +243,22 @@ input.input-error:focus {
   pointer-events: none;
 }
 
-.send-btn {
+.send-btn,
+.upload-btn button {
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
   background-color: darkolivegreen;
   color: white;
   font-weight: 700;
+  font-family: inherit;
+  font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
-.send-btn:hover {
+.send-btn:hover,
+.upload-btn button:hover {
   background-color: #506f3a;
 }
 
