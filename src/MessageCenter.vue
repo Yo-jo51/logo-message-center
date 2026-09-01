@@ -9,10 +9,8 @@ import NewMail from './components/NewMail.vue'
 
 import { TestMessages } from '@/MessageData/MessageData'
 
-//Chrome Storage save
-const savedMessages = localStorage.getItem('messages')
-
-const messages = ref(savedMessages ? JSON.parse(savedMessages) : TestMessages)
+const saved = localStorage.getItem('messages')
+const messages = ref(saved ? JSON.parse(saved) : TestMessages)
 
 const searchText = ref('')
 const currentMessage = ref(null)
@@ -24,17 +22,82 @@ const sentOpen = ref(true)
 const filterStatus = ref('All Messages')
 const sortOrder = ref('Oldest')
 
-function openNewMail() {
-  currentMessage.value = null
-  creatingNewMail.value = true
-}
+const filteredMessages = computed(() => {
+  let result = [...messages.value]
+
+  // Filter
+  if (filterStatus.value === 'Seen') result = result.filter((m) => m.seen)
+
+  if (filterStatus.value === 'Unseen') result = result.filter((m) => !m.seen)
+
+  if (filterStatus.value === 'Priority') result = result.filter((m) => m.important)
+
+  // Search
+  const search = searchText.value.toLowerCase().trim()
+
+  if (search) {
+    result = result.filter((m) =>
+      `${m.sender} ${m.subject} ${m.body}`.toLowerCase().includes(search),
+    )
+  }
+
+  // Sort
+  result.sort((a, b) => {
+    const dateA = new Date(a.timestamp)
+    const dateB = new Date(b.timestamp)
+
+    return sortOrder.value === 'Newest' ? dateB - dateA : dateA - dateB
+  })
+
+  return result
+})
+
+const inboxMessages = computed(() => filteredMessages.value.filter((m) => m.folder === 'Inbox'))
+
+const sentMessages = computed(() => filteredMessages.value.filter((m) => m.folder === 'Sent'))
+
+const priorityCount = computed(() => messages.value.filter((m) => m.important).length)
 
 function openMessage(message) {
   message.seen = true
   currentMessage.value = message
   creatingNewMail.value = false
 
+  saveMessages()
+}
+
+function openNewMail() {
+  currentMessage.value = null
+  creatingNewMail.value = true
+}
+
+function applyFilter(filter) {
+  filterStatus.value = filter.status
+  sortOrder.value = filter.sort
+}
+
+function saveMessages() {
   localStorage.setItem('messages', JSON.stringify(messages.value))
+}
+
+function sendMail(mail) {
+  const id = messages.value.length ? Math.max(...messages.value.map((m) => m.id)) + 1 : 1
+
+  messages.value.push({
+    id,
+    sender: 'You',
+    reciever: mail.recipient,
+    subject: mail.subject,
+    body: mail.body,
+    timestamp: new Date().toDateString(),
+    folder: 'Sent',
+    seen: true,
+    important: mail.priority,
+    attachments: mail.attachments || [],
+  })
+
+  saveMessages()
+  creatingNewMail.value = false
 }
 
 function toggleInbox() {
@@ -44,89 +107,6 @@ function toggleInbox() {
 function toggleSent() {
   sentOpen.value = !sentOpen.value
 }
-
-function applyFilter(filter) {
-  filterStatus.value = filter.status
-  sortOrder.value = filter.sort
-}
-
-const filteredMessages = computed(() => {
-  let result = [...messages.value]
-
-  if (filterStatus.value === 'Seen') {
-    result = result.filter((message) => message.seen)
-  }
-
-  if (filterStatus.value === 'Unseen') {
-    result = result.filter((message) => !message.seen)
-  }
-
-  if (filterStatus.value === 'Priority') {
-    result = result.filter((message) => message.important)
-  }
-
-  const search = searchText.value.trim().toLowerCase()
-
-  if (search) {
-    result = result.filter(
-      (message) =>
-        String(message.sender || '')
-          .toLowerCase()
-          .includes(search) ||
-        String(message.subject || '')
-          .toLowerCase()
-          .includes(search) ||
-        String(message.body || '')
-          .toLowerCase()
-          .includes(search),
-    )
-  }
-
-  result.sort((a, b) => {
-    const dateA = new Date(a.timestamp)
-    const dateB = new Date(b.timestamp)
-
-    if (sortOrder.value === 'Newest') {
-      return dateB - dateA
-    }
-
-    return dateA - dateB
-  })
-
-  return result
-})
-
-const inboxMessages = computed(() =>
-  filteredMessages.value.filter((message) => message.folder === 'Inbox'),
-)
-
-const sentMessages = computed(() =>
-  filteredMessages.value.filter((message) => message.folder === 'Sent'),
-)
-
-const sendMail = (newMailData) => {
-  messages.value.push({
-    id: messages.value.length ? Math.max(...messages.value.map((m) => m.id)) + 1 : 1,
-
-    sender: 'You',
-    reciever: newMailData.recipient,
-    subject: newMailData.subject,
-    body: newMailData.body,
-    timestamp: new Date().toDateString(),
-    folder: 'Sent',
-    seen: true,
-    important: newMailData.priority,
-    attachments: newMailData.attachments || [],
-  })
-
-  localStorage.setItem('messages', JSON.stringify(messages.value))
-
-  creatingNewMail.value = false
-}
-
-const priorityCount = computed(() => {
-  return messages.value.filter((message) => message.important).length
-})
 </script>
 
 <template>

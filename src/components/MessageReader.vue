@@ -29,17 +29,16 @@ defineProps<{
 
       <div class="attachments-section">
         <h4>Attachments:</h4>
+
         <div class="attachments-grid">
           <a
-            v-for="file in message.attachments"
+            v-for="file in message.attachments || []"
             :key="file.path"
             :href="file.path"
             :download="file.name"
             class="attachment-chip"
           >
-            <div class="file-info">
-              <span class="file-name">📥 {{ file.name }}</span>
-            </div>
+            <span class="file-name">📥 {{ file.name }}</span>
           </a>
         </div>
       </div>

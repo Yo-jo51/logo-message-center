@@ -6,13 +6,15 @@ const subject = ref('')
 const body = ref('')
 const priority = ref(false)
 
-const hasAttemptedSubmit = ref(false)
+const selectedFile = ref<File | null>(null)
+const fileInput = ref<HTMLInputElement | null>(null)
 const editorRef = ref<HTMLDivElement | null>(null)
+const hasAttemptedSubmit = ref(false)
 
 const emit = defineEmits<{
   (
     e: 'send',
-    payload: {
+    mail: {
       recipient: string
       subject: string
       body: string
@@ -23,26 +25,28 @@ const emit = defineEmits<{
 }>()
 
 const isEmailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient.value.trim()))
+
 const showError = computed(() => hasAttemptedSubmit.value && !isEmailValid.value)
 
-const format = (command: string) => {
-  document.execCommand(command, false, '')
+function updateBody() {
+  body.value = editorRef.value?.innerHTML || ''
+}
+
+function format(command: string) {
+  document.execCommand(command)
   updateBody()
   editorRef.value?.focus()
 }
 
-const updateBody = () => {
-  if (editorRef.value) {
-    body.value = editorRef.value.innerHTML
-  }
+function uploadFile(event: Event) {
+  const input = event.target as HTMLInputElement
+  selectedFile.value = input.files?.[0] || null
 }
 
-const sendEmail = () => {
+function sendEmail() {
   hasAttemptedSubmit.value = true
 
-  if (!isEmailValid.value) {
-    return
-  }
+  if (!isEmailValid.value) return
 
   emit('send', {
     recipient: recipient.value.trim(),
@@ -57,24 +61,10 @@ const sendEmail = () => {
   body.value = ''
   priority.value = false
   selectedFile.value = null
-
-  if (fileInput.value) {
-    fileInput.value.value = ''
-  }
-
   hasAttemptedSubmit.value = false
-}
 
-const selectedFile = ref<File | null>(null)
-
-const fileInput = ref<HTMLInputElement | null>(null)
-
-const handleFileUpload = (event: Event) => {
-  const input = event.target as HTMLInputElement
-
-  if (input.files && input.files.length > 0) {
-    selectedFile.value = input.files[0]
-  }
+  if (editorRef.value) editorRef.value.innerHTML = ''
+  if (fileInput.value) fileInput.value.value = ''
 }
 </script>
 
@@ -119,7 +109,7 @@ const handleFileUpload = (event: Event) => {
 
       <div class="buttons">
         <div class="upload-btn">
-          <input ref="fileInput" type="file" hidden @change="handleFileUpload" />
+          <input ref="fileInput" type="file" hidden @change="" />
 
           <button type="button" @click="fileInput?.click()">Upload</button>
 
