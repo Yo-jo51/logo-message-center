@@ -55,6 +55,10 @@ const filteredMessages = computed(() => {
     result = result.filter((message) => !message.seen)
   }
 
+  if (filterStatus.value === 'Priority') {
+    result = result.filter((message) => message.important)
+  }
+
   const search = searchText.value.trim().toLowerCase()
 
   if (search) {
@@ -104,10 +108,16 @@ const sendMail = (newMailData) => {
     timestamp: new Date().toDateString(),
     folder: 'Sent',
     seen: true,
+    important: newMailData.priority,
   })
 
   creatingNewMail.value = false
 }
+
+//High priority nachrichten zählen
+const priorityCount = computed(() => {
+  return messages.value.filter((message) => message.important).length
+})
 </script>
 
 <template>
@@ -119,10 +129,11 @@ const sendMail = (newMailData) => {
         :total-count="messages.length"
         :unread-count="messages.filter((m) => !m.seen).length"
         :read-count="messages.filter((m) => m.seen).length"
+        :prioritycount="priorityCount"
         @FilterApplied="applyFilter"
       />
 
-      <!-- INBOX -->
+      <!-- Inbox -->
       <div class="folder" :class="{ active: inboxOpen }">
         <button class="folder-header" @click="toggleInbox">
           <span>Inbox ({{ inboxMessages.length }})</span>
@@ -147,7 +158,7 @@ const sendMail = (newMailData) => {
         </div>
       </div>
 
-      <!-- SENT -->
+      <!-- sent -->
       <div class="folder" :class="{ active: sentOpen }">
         <button class="folder-header" @click="toggleSent">
           <span>Sent ({{ sentMessages.length }})</span>

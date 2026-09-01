@@ -18,7 +18,7 @@ defineProps<{
 
       <p id="Date">Date: {{ message.timestamp }}</p>
       <h2 id="Subject">{{ message.subject }}</h2>
-      <p id="body">{{ message.body || 'No Content' }}</p>
+      <p id="body" v-html="message.body || 'No Content'"></p>
     </div>
 
     <h3 v-else>

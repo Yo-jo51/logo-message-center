@@ -3,18 +3,35 @@ import { ref, computed } from 'vue'
 
 const recipient = ref('')
 const subject = ref('')
-const body = ref('')
+const body = ref('') // Enthält jetzt den formatierten HTML-String
+const priority = ref(false)
 
 const hasAttemptedSubmit = ref(false)
+const editorRef = ref<HTMLDivElement | null>(null)
 
 const emit = defineEmits<{
-  (e: 'send', payload: { recipient: string; subject: string; body: string }): void
+  (
+    e: 'send',
+    payload: { recipient: string; subject: string; body: string; priority: boolean },
+  ): void
 }>()
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-const isEmailValid = computed(() => emailRegex.test(recipient.value.trim()))
+const isEmailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient.value.trim()))
 const showError = computed(() => hasAttemptedSubmit.value && !isEmailValid.value)
+
+// Funktion zum Formatieren des markierten Textes
+const format = (command: string) => {
+  document.execCommand(command, false, '')
+  updateBody()
+  editorRef.value?.focus()
+}
+
+// Aktualisiert die reactive Variable mit dem HTML-Inhalt des Editors
+const updateBody = () => {
+  if (editorRef.value) {
+    body.value = editorRef.value.innerHTML
+  }
+}
 
 const sendEmail = () => {
   hasAttemptedSubmit.value = true
@@ -26,12 +43,19 @@ const sendEmail = () => {
   emit('send', {
     recipient: recipient.value.trim(),
     subject: subject.value.trim(),
-    body: body.value,
+    body: body.value, // Sendet den formatierten HTML-Text
+    priority: priority.value,
   })
 
   recipient.value = ''
   subject.value = ''
   body.value = ''
+  priority.value = false
+
+  if (editorRef.value) {
+    editorRef.value.innerHTML = '' // Leert das Editor-Spielfeld
+  }
+
   hasAttemptedSubmit.value = false
 }
 </script>
@@ -59,13 +83,29 @@ const sendEmail = () => {
       </div>
 
       <div class="input-group">
-        <label for="body">Message</label>
-        <textarea id="body" v-model="body" placeholder="Write your message..."></textarea>
+        <label>Message</label>
+        <div class="toolbar">
+          <button type="button" @click="format('bold')"><b>B</b></button>
+          <button type="button" @click="format('italic')"><i>I</i></button>
+          <button type="button" @click="format('underline')"><u>U</u></button>
+        </div>
+
+        <div
+          ref="editorRef"
+          class="text-editor"
+          contenteditable="true"
+          @input="updateBody"
+          placeholder="Write your message..."
+        ></div>
       </div>
 
-      <button class="send-btn" :class="{ 'btn-disabled': showError }" @click="sendEmail">
-        Send
-      </button>
+      <div class="buttons">
+        <button class="send-btn" :class="{ 'btn-disabled': showError }" @click="sendEmail">
+          Send
+        </button>
+
+        <label><input type="checkbox" v-model="priority" /> High Priority</label>
+      </div>
     </div>
   </div>
 </template>
@@ -103,11 +143,11 @@ label {
 }
 
 input,
-textarea {
+.text-editor {
   width: 100%;
   padding: 10px;
   border: 1px solid #c8c0ae;
-  border-radius: 4px;
+  border-radius: 0 0 4px 4px;
   background-color: #fffdf9;
   font: inherit;
   color: #111;
@@ -117,8 +157,12 @@ textarea {
     box-shadow 0.2s ease;
 }
 
+input {
+  border-radius: 4px;
+}
+
 input:focus,
-textarea:focus {
+.text-editor:focus {
   outline: none;
   border-color: darkolivegreen;
 }
@@ -139,9 +183,37 @@ input.input-error:focus {
   font-weight: 600;
 }
 
-textarea {
+.toolbar {
+  display: flex;
+  gap: 4px;
+}
+
+.toolbar button {
+  background: #fffdf9;
+  border: 1px solid #c8c0ae;
+  border-radius: 3px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.toolbar button:hover {
+  background-color: #e2dacb;
+}
+
+.text-editor {
   min-height: 250px;
-  resize: vertical;
+  max-height: 300px;
+  overflow-y: auto;
+  text-align: left;
+  word-break: break-word;
+}
+
+.text-editor:empty:before {
+  content: attr(placeholder);
+  color: #a09885;
+  pointer-events: none;
 }
 
 .send-btn {
@@ -162,5 +234,21 @@ textarea {
 .send-btn.btn-disabled {
   background-color: #8c9c84;
   cursor: not-allowed;
+}
+
+.buttons {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-top: 20px;
+  gap: 20px;
+  white-space: nowrap;
+}
+
+.buttons label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
 }
 </style>

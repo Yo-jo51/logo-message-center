@@ -13,7 +13,7 @@ function FilterChange() {
   })
 }
 
-defineProps(['totalCount', 'unreadCount', 'readCount'])
+defineProps(['totalCount', 'unreadCount', 'readCount', 'prioritycount'])
 </script>
 
 <template>
@@ -25,6 +25,8 @@ defineProps(['totalCount', 'unreadCount', 'readCount'])
         <option value="Unseen">Unseen ({{ unreadCount }})</option>
 
         <option value="Seen">Seen ({{ readCount }})</option>
+
+        <option value="Priority">High Priority ({{ prioritycount }})</option>
       </select>
 
       <select v-model="sortFilter" @change="FilterChange" class="filter-select">
