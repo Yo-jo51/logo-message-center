@@ -1,8 +1,25 @@
-:root {
-  --deep-teal: #4f6e4f;
-  --muted-teal: #87a687;
-  --parchment: #f4f1ea;
-  --porcelain: #fffdf9;
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #2563eb;
+  --color-primary-dark: #1d4ed8;
+  --color-navy: #172033;
+
+  --color-background: #f6f8fb;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f1f5f9;
+
+  --color-border: #e2e8f0;
+  --color-border-dark: #cbd5e1;
+
+  --color-text: #172033;
+  --color-text-secondary: #64748b;
+  --color-text-muted: #94a3b8;
+
+  --color-unread: #eff6ff;
+  --color-success: #16a34a;
+  --color-warning: #f59e0b;
+  --color-danger: #dc2626;
 }
 
 * {
@@ -18,9 +35,19 @@ html {
     BlinkMacSystemFont,
     'Segoe UI',
     sans-serif;
-  color: #333;
+
+  color: var(--color-text);
+  background: var(--color-background);
 }
 
 body {
-  background-color: var(--parchment);
+  min-height: 100vh;
+  background: var(--color-background);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }

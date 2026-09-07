@@ -28,7 +28,7 @@ function searchChanged() {
   left: 0;
   width: 350px;
   z-index: 10;
-  background: var(--porcelain);
+  background: var(--color-surface);
 }
 
 .search {
@@ -36,7 +36,7 @@ function searchChanged() {
   height: 5vh;
   padding-left: 10px;
   box-sizing: border-box;
-  border: 1px solid var(--muted-teal);
+  border: 1px solid var(--color-border-dark);
   border-radius: 0;
   background: transparent;
   outline: none;

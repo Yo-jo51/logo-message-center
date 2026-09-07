@@ -47,7 +47,7 @@ defineProps(['totalCount', 'unreadCount', 'readCount', 'prioritycount'])
   display: flex;
   width: 100%;
   margin-top: 42px;
-  border-right: 1px solid var(--muted-teal);
+  border-right: 1px solid var(--color-border-dark);
 }
 
 .filter-select {
@@ -55,9 +55,9 @@ defineProps(['totalCount', 'unreadCount', 'readCount', 'prioritycount'])
   flex: 1;
   height: 40px;
   padding: 0 10px;
-  background: var(--porcelain);
+  background: var(--color-surface);
   border: none;
-  border-bottom: 1px solid var(--muted-teal);
+  border-bottom: 1px solid var(--color-border-dark);
   font-size: 14px;
   margin-top: 1px;
 }

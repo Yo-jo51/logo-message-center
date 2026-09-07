@@ -39,7 +39,7 @@ defineProps<{
           >
             <span class="file-name">📥 {{ file.name }}</span>
 
-            <span class="file-size" style="font-size: 0.75rem; color: #666; margin-top: 2px">
+            <span class="file-size" style="font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 2px">
               {{ file.size }}
             </span>
           </a>
@@ -57,7 +57,7 @@ defineProps<{
 .reader {
   flex: 1;
   height: 85vh;
-  background-color: var(--parchment);
+  background-color: var(--color-background);
   padding: 20px;
   margin-top: 15vh;
   overflow-y: auto;
@@ -76,13 +76,13 @@ h3 {
   font-weight: 900;
   font-size: x-large;
   max-width: 45ch;
-  color: #7a7a7a;
+  color: var(--color-text-muted);
   transform: translateY(-20px);
 }
 
 #Subject {
   padding-top: 6px;
-  border-top: 1px solid #c8c0ae;
+  border-top: 1px solid var(--color-border);
 }
 
 #body {
@@ -94,7 +94,7 @@ h3 {
 #Date {
   margin-top: 6px;
   margin-bottom: 6px;
-  color: rgb(100, 99, 99);
+  color: var(--color-text-secondary);
 }
 
 .meta-line {
@@ -105,13 +105,13 @@ h3 {
 .attachments-section {
   margin-top: 40px;
   padding-top: 15px;
-  border-top: 1px dashed #c8c0ae;
+  border-top: 1px dashed var(--color-border);
   grid-row: column;
 }
 
 .attachments-section h4 {
   margin: 0 0 12px 0;
-  color: #2f4f2f;
+  color: var(--color-text);
   font-size: 0.95rem;
   font-weight: 700;
 }
@@ -127,27 +127,31 @@ h3 {
   display: flex;
   align-items: center;
   gap: 10px;
-  background-color: #fffdf9;
-  border: 1px solid #c8c0ae;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   padding: 8px 14px;
   min-width: 180px;
   max-width: 280px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 2px 4px rgb(23 32 51 / 0.03);
   text-decoration: none;
 }
 
 .attachment-chip:hover {
-  background-color: #f7f3e9;
-  border-color: darkolivegreen;
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-primary);
 }
 
 .file-name {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #111;
+  color: var(--color-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.file-size {
+  white-space: nowrap;
 }
 </style>

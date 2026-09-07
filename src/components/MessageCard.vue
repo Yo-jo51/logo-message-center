@@ -29,51 +29,51 @@ const emit = defineEmits(['openMail'])
   flex-direction: column;
   gap: 6px;
   padding: 16px 20px;
-  background: #fffdf9;
-  border: 1px solid #87a687;
-  border-left: 6px solid darkolivegreen;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-dark);
+  border-left: 6px solid var(--color-primary);
   border-radius: 3px;
   text-align: left;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(79, 110, 79, 0.12);
+  box-shadow: 0 2px 4px rgb(37 99 235 / 0.12);
   transition: 0.2s ease;
 }
 
 .Card:hover {
-  background: #f4f1ea;
+  background: var(--color-surface-hover);
 }
 
 .Card.seen {
-  background: #e6e2d8;
-  border-color: #c8c0ae;
-  border-left-color: #c8c0ae;
+  background: var(--color-surface-hover);
+  border-color: var(--color-border);
+  border-left-color: var(--color-border);
   box-shadow: none;
 }
 
 .Card.important {
-  background: #fffaa0;
-  border-left-color: #eb9c5c;
+  background: var(--color-warning);
+  border-left-color: var(--color-warning);
 }
 
 .Card.selected {
-  background: #d1e7dd;
-  border-color: #1f4e1f;
-  box-shadow: 0 0 0 2px #4f6e4f;
+  background: var(--color-unread);
+  border-color: var(--color-primary-dark);
+  box-shadow: 0 0 0 2px var(--color-primary);
 }
 
 .Card.seen .sender {
   font-weight: 500;
-  color: #555;
+  color: var(--color-text-secondary);
 }
 
 .Card.seen .date {
   font-weight: normal;
-  color: #777;
+  color: var(--color-text-muted);
 }
 
 .Card.seen .subject {
   font-weight: normal;
-  color: #666;
+  color: var(--color-text-secondary);
 }
 
 .card-header {
@@ -85,19 +85,19 @@ const emit = defineEmits(['openMail'])
 .sender {
   font-size: 15px;
   font-weight: 800;
-  color: #2e442e;
+  color: var(--color-text);
 }
 
 .date {
   font-size: 12px;
   font-weight: 600;
-  color: #4f6e4f;
+  color: var(--color-primary);
 }
 
 .subject {
   font-size: 14px;
   font-weight: 600;
   line-height: 1.4;
-  color: #111;
+  color: var(--color-text);
 }
 </style>

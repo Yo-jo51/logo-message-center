@@ -206,13 +206,13 @@ function toggleSent() {
 }
 
 .folder.active {
-  border-bottom: 1px solid #87a687;
+  border-bottom: 1px solid var(--color-border-dark);
 }
 
 .folder-header {
   width: 100%;
   border: none;
-  color: #2f4f2f;
+  color: var(--color-text);
   padding: 10px 12px;
   display: flex;
   justify-content: space-between;
@@ -228,7 +228,7 @@ function toggleSent() {
   flex-direction: column;
   gap: 6px;
   padding: 6px;
-  max-height: 400px;
+  max-height: 250px;
   overflow-y: auto;
   scrollbar-width: none;
 }
@@ -241,14 +241,14 @@ function toggleSent() {
   height: 55px;
   border: none;
   border-radius: 50%;
-  background-color: #4f6e4f;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--color-surface);
   font-size: 32px;
   cursor: pointer;
 }
 
 .plus-btn:hover {
-  background-color: #5a7b5a;
+  background-color: var(--color-primary-dark);
 }
 
 .empty-reader {
@@ -256,6 +256,6 @@ function toggleSent() {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #777;
+  color: var(--color-text-muted);
 }
 </style>

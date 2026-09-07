@@ -53,10 +53,9 @@ function sendEmail() {
     body: body.value,
     priority: priority.value,
     attachments: selectedFile.value ? [selectedFile.value] : [],
-    fileName: selectedFile.value ? selectedFile.value.name : null, // Hier wird der Name übergeben
+    fileName: selectedFile.value ? selectedFile.value.name : null,
   })
 
-  // Reset Form
   recipient.value = ''
   subject.value = ''
   body.value = ''
@@ -135,7 +134,7 @@ function sendEmail() {
 .reader {
   flex: 1;
   height: 85vh;
-  background-color: var(--parchment);
+  background-color: var(--color-background);
   padding: 20px;
   margin-top: 15vh;
   overflow-y: auto;
@@ -163,11 +162,11 @@ input,
 .text-editor {
   width: 100%;
   padding: 10px;
-  border: 1px solid #c8c0ae;
+  border: 1px solid var(--color-border);
   border-radius: 0 0 4px 4px;
-  background-color: #fffdf9;
+  background-color: var(--color-surface);
   font: inherit;
-  color: #111;
+  color: var(--color-text);
   box-sizing: border-box;
 }
 input {
@@ -176,14 +175,14 @@ input {
 input:focus,
 .text-editor:focus {
   outline: none;
-  border-color: darkolivegreen;
+  border-color: var(--color-primary);
 }
 input.input-error {
-  border-color: #b93a3a;
-  background-color: #fff9f9;
+  border-color: var(--color-danger);
+  background-color: var(--color-surface);
 }
 .error-text {
-  color: #b93a3a;
+  color: var(--color-danger);
   font-size: 0.85rem;
   margin: 0;
   font-weight: 600;
@@ -193,14 +192,14 @@ input.input-error {
   gap: 4px;
 }
 .toolbar button {
-  background: #fffdf9;
-  border: 1px solid #c8c0ae;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 3px;
   padding: 4px 10px;
   cursor: pointer;
 }
 .toolbar button:hover {
-  background-color: #e2dacb;
+  background-color: var(--color-surface-hover);
 }
 .text-editor {
   min-height: 250px;
@@ -209,7 +208,7 @@ input.input-error {
 }
 .text-editor:empty:before {
   content: attr(placeholder);
-  color: #a09885;
+  color: var(--color-text-muted);
 }
 .attachments-section {
   margin-top: 15px;
@@ -220,31 +219,31 @@ input.input-error {
   display: flex;
   align-items: center;
   gap: 10px;
-  background-color: #fffdf9;
-  border: 1px solid #c8c0ae;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   padding: 8px 14px;
 }
 .file-size {
   font-size: 0.85rem;
-  color: #666;
+  color: var(--color-text-secondary);
 }
 .send-btn,
 .upload-btn button {
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
-  background-color: darkolivegreen;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--color-surface);
   font-weight: 700;
   cursor: pointer;
 }
 .send-btn:hover,
 .upload-btn button:hover {
-  background-color: #506f3a;
+  background-color: var(--color-primary-dark);
 }
 .send-btn.btn-disabled {
-  background-color: #8c9c84;
+  background-color: var(--color-text-muted);
   cursor: not-allowed;
 }
 .buttons {
