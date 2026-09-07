@@ -5,24 +5,26 @@
   --color-primary-dark: #1d4ed8;
   --color-navy: #172033;
 
+  /*Background colors*/
   --color-background: #f6f8fb;
   --color-surface: #ffffff;
   --color-surface-hover: #f1f5f9;
 
+  /*border colors*/
   --color-border: #e2e8f0;
   --color-border-dark: #cbd5e1;
 
+  /*Text colors*/
   --color-text: #172033;
   --color-text-secondary: #64748b;
   --color-text-muted: #94a3b8;
 
+  /*Message colors*/
   --color-unread: #eff6ff;
-  --color-success: #16a34a;
-  --color-warning: #f59e0b;
-  --color-danger: #dc2626;
+  --color-priority: #ffaa2b;
+  --color-priority-muted: #e5b26d;
 }
-
-* {
+w * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;

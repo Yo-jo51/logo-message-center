@@ -51,14 +51,15 @@ const emit = defineEmits(['openMail'])
 }
 
 .Card.important {
-  background: var(--color-warning);
-  border-left-color: var(--color-warning);
+  background: var(--color-priority-muted);
+  border-left-color: var(--color-priority);
 }
 
 .Card.selected {
   background: var(--color-unread);
-  border-color: var(--color-primary-dark);
-  box-shadow: 0 0 0 2px var(--color-primary);
+  border: 2px solid var(--color-navy);
+  border-left: 6px solid var(--color-navy);
+  box-shadow: none;
 }
 
 .Card.seen .sender {

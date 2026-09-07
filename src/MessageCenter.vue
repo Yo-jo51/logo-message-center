@@ -20,19 +20,15 @@ const inboxOpen = ref(true)
 const sentOpen = ref(true)
 
 const filterStatus = ref('All Messages')
-const sortOrder = ref('Oldest')
+const sortOrder = ref('Newest')
 
 const filteredMessages = computed(() => {
   let result = [...messages.value]
 
-  // Filter
   if (filterStatus.value === 'Seen') result = result.filter((m) => m.seen)
-
   if (filterStatus.value === 'Unseen') result = result.filter((m) => !m.seen)
-
   if (filterStatus.value === 'Priority') result = result.filter((m) => m.important)
 
-  // Search
   const search = searchText.value.toLowerCase().trim()
 
   if (search) {
@@ -41,7 +37,6 @@ const filteredMessages = computed(() => {
     )
   }
 
-  // Sort
   result.sort((a, b) => {
     const dateA = new Date(a.timestamp)
     const dateB = new Date(b.timestamp)
@@ -53,9 +48,7 @@ const filteredMessages = computed(() => {
 })
 
 const inboxMessages = computed(() => filteredMessages.value.filter((m) => m.folder === 'Inbox'))
-
 const sentMessages = computed(() => filteredMessages.value.filter((m) => m.folder === 'Sent'))
-
 const priorityCount = computed(() => messages.value.filter((m) => m.important).length)
 
 function openMessage(message) {
@@ -94,6 +87,7 @@ function sendMail(mail) {
     seen: true,
     important: mail.priority,
     attachments: mail.attachments || [],
+    fileName: mail.fileName,
   })
 
   saveMessages()
@@ -110,8 +104,8 @@ function toggleSent() {
 </script>
 
 <template>
-  <div class="layout">
-    <div class="sidebar">
+  <div class="flex w-screen h-screen overflow-hidden">
+    <div class="flex flex-col w-[350px] h-[85vh] mt-[15vh] gap-[5px]">
       <MessageSearch @SearchChanged="searchText = $event" />
 
       <MessageFilter
@@ -122,17 +116,52 @@ function toggleSent() {
         @FilterApplied="applyFilter"
       />
 
-      <!-- Inbox -->
-      <div class="folder" :class="{ active: inboxOpen }">
-        <button class="folder-header" @click="toggleInbox">
+      <div
+        class="overflow-hidden"
+        :class="{
+          'border-b border-[var(--color-border-dark)]': inboxOpen,
+        }"
+      >
+        <button
+          class="w-full border-none text-[var(--color-text)] py-[10px] px-3 flex justify-between items-center text-[0.9rem] font-bold cursor-pointer text-left"
+          @click="toggleInbox"
+        >
           <span>Inbox ({{ inboxMessages.length }})</span>
 
-          <span>
-            {{ inboxOpen ? '∧' : '∨' }}
-          </span>
+          <svg
+            v-if="inboxOpen"
+            xmlns="http://w3.org"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m18 15-6-6-6 6" />
+          </svg>
+          <svg
+            v-else
+            xmlns="http://w3.org"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
         </button>
 
-        <div v-show="inboxOpen" class="folder-body">
+        <div
+          v-show="inboxOpen"
+          class="flex flex-col gap-[6px] p-[6px] max-h-[270px] overflow-y-auto [scrollbar-width:none]"
+        >
           <MessageCard
             v-for="message in inboxMessages"
             :key="message.id"
@@ -147,17 +176,52 @@ function toggleSent() {
         </div>
       </div>
 
-      <!-- sent -->
-      <div class="folder" :class="{ active: sentOpen }">
-        <button class="folder-header" @click="toggleSent">
+      <div
+        class="overflow-hidden"
+        :class="{
+          'border-b border-[var(--color-border-dark)]': sentOpen,
+        }"
+      >
+        <button
+          class="w-full border-none text-[var(--color-text)] py-[10px] px-3 flex justify-between items-center text-[0.9rem] font-bold cursor-pointer text-left"
+          @click="toggleSent"
+        >
           <span>Sent ({{ sentMessages.length }})</span>
 
-          <span>
-            {{ sentOpen ? '∧' : '∨' }}
-          </span>
+          <svg
+            v-if="sentOpen"
+            xmlns="http://w3.org"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m18 15-6-6-6 6" />
+          </svg>
+          <svg
+            v-else
+            xmlns="http://w3.org"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
         </button>
 
-        <div v-show="sentOpen" class="folder-body">
+        <div
+          v-show="sentOpen"
+          class="flex flex-col gap-[6px] p-[6px] max-h-[270px] overflow-y-auto [scrollbar-width:none]"
+        >
           <MessageCard
             v-for="message in sentMessages"
             :key="message.id"
@@ -177,85 +241,15 @@ function toggleSent() {
 
     <MessageReader v-else-if="currentMessage" :message="currentMessage" />
 
-    <div v-else class="empty-reader">No Message selected</div>
+    <div v-else class="flex-1 flex items-center justify-center text-[var(--color-text-muted)]">
+      No Message selected
+    </div>
 
-    <button class="plus-btn" @click="openNewMail">+</button>
+    <button
+      class="fixed right-[30px] bottom-[30px] size-[55px] border-none rounded-full bg-[var(--color-primary)] cursor-pointer flex justify-center items-center box-border font-extrabold text-2xl text-white"
+      @click="openNewMail"
+    >
+      +
+    </button>
   </div>
 </template>
-
-<style scoped>
-.layout {
-  display: flex;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  width: 350px;
-  height: 85vh;
-  margin-top: 15vh;
-  gap: 5px;
-}
-
-.folder {
-  border: none;
-  overflow: hidden;
-}
-
-.folder.active {
-  border-bottom: 1px solid var(--color-border-dark);
-}
-
-.folder-header {
-  width: 100%;
-  border: none;
-  color: var(--color-text);
-  padding: 10px 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  text-align: left;
-}
-
-.folder-body {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 6px;
-  max-height: 250px;
-  overflow-y: auto;
-  scrollbar-width: none;
-}
-
-.plus-btn {
-  position: fixed;
-  right: 30px;
-  bottom: 30px;
-  width: 55px;
-  height: 55px;
-  border: none;
-  border-radius: 50%;
-  background-color: var(--color-primary);
-  color: var(--color-surface);
-  font-size: 32px;
-  cursor: pointer;
-}
-
-.plus-btn:hover {
-  background-color: var(--color-primary-dark);
-}
-
-.empty-reader {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-muted);
-}
-</style>

@@ -4,7 +4,7 @@ import { ref } from 'vue'
 const emit = defineEmits(['FilterApplied'])
 
 const messageFilter = ref('All Messages')
-const sortFilter = ref('Oldest')
+const sortFilter = ref('Newest')
 
 function FilterChange() {
   emit('FilterApplied', {
