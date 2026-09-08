@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import Filedrop from './Filedrop.vue'
 
 const recipient = ref('')
 const subject = ref('')
@@ -7,7 +8,6 @@ const body = ref('')
 const priority = ref(false)
 
 const selectedFile = ref<File | null>(null)
-const fileInput = ref<HTMLInputElement | null>(null)
 const editorRef = ref<HTMLDivElement | null>(null)
 const hasAttemptedSubmit = ref(false)
 
@@ -37,12 +37,6 @@ function format(command: string) {
   updateBody()
   editorRef.value?.focus()
 }
-
-function uploadFile(event: Event) {
-  const input = event.target as HTMLInputElement
-  selectedFile.value = input.files?.[0] || null
-}
-
 function sendEmail() {
   hasAttemptedSubmit.value = true
   if (!isEmailValid.value) return
@@ -64,14 +58,13 @@ function sendEmail() {
   hasAttemptedSubmit.value = false
 
   if (editorRef.value) editorRef.value.innerHTML = ''
-  if (fileInput.value) fileInput.value.value = ''
 }
 </script>
 
 <template>
   <div class="reader">
     <div class="new-mail">
-      <h2>New Message</h2>
+      <h2 class="font-bold text-2xl">New Message</h2>
 
       <div class="input-group">
         <label for="recipient">To</label>
@@ -115,11 +108,7 @@ function sendEmail() {
       </div>
 
       <div class="buttons">
-        <div class="upload-btn">
-          <input ref="fileInput" type="file" hidden @change="uploadFile" />
-          <button type="button" @click="fileInput?.click()">Upload</button>
-        </div>
-
+        <Filedrop @file-selected="selectedFile = $event" />
         <button class="send-btn" :class="{ 'btn-disabled': showError }" @click="sendEmail">
           Send
         </button>
@@ -228,8 +217,7 @@ input.input-error {
   font-size: 0.85rem;
   color: var(--color-text-secondary);
 }
-.send-btn,
-.upload-btn button {
+.send-btn {
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
@@ -238,14 +226,16 @@ input.input-error {
   font-weight: 700;
   cursor: pointer;
 }
-.send-btn:hover,
-.upload-btn button:hover {
+
+.send-btn:hover {
   background-color: var(--color-primary-dark);
 }
+
 .send-btn.btn-disabled {
   background-color: var(--color-text-muted);
   cursor: not-allowed;
 }
+
 .buttons {
   display: flex;
   align-items: center;

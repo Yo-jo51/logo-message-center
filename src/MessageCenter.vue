@@ -76,18 +76,26 @@ function saveMessages() {
 function sendMail(mail) {
   const id = messages.value.length ? Math.max(...messages.value.map((m) => m.id)) + 1 : 1
 
+  let extrahiertName = ''
+  if (mail.fileName) {
+    extrahiertName = mail.fileName
+  } else if (mail.attachments && mail.attachments.length > 0) {
+    const firstAttachment = mail.attachments[0]
+    extrahiertName = firstAttachment.name || firstAttachment
+  }
+
+  console.log(mail.attachments)
+
   messages.value.push({
     id,
     sender: 'You',
-    reciever: mail.recipient,
+    receiver: mail.recipient,
     subject: mail.subject,
     body: mail.body,
     timestamp: new Date().toDateString(),
     folder: 'Sent',
     seen: true,
     important: mail.priority,
-    attachments: mail.attachments || [],
-    fileName: mail.fileName,
   })
 
   saveMessages()
@@ -246,10 +254,10 @@ function toggleSent() {
     </div>
 
     <button
-      class="fixed right-[30px] bottom-[30px] size-[55px] border-none rounded-full bg-[var(--color-primary)] cursor-pointer flex justify-center items-center box-border font-extrabold text-2xl text-white"
+      class="fixed right-[30px] bottom-[30px] size-[55px] border-none rounded-full bg-[var(--color-primary)] cursor-pointer flex justify-center items-center box-border text-white"
       @click="openNewMail"
     >
-      +
+      <span class="text-4xl font-extrabold h-11">+</span>
     </button>
   </div>
 </template>
