@@ -13,7 +13,10 @@ function openFilePicker() {
 }
 
 function handleFile(file: File | undefined) {
-  if (!file) return
+  if (!file) {
+    alert('not a file')
+    return
+  }
 
   emit('fileSelected', file)
 }
